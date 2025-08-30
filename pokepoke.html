@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>今日のポケモン</title>
-
-  <!-- Pico.cssを残しつつカスタムスタイルでゆるふわ感を追加 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 
   <style>
@@ -64,6 +62,15 @@
       white-space: pre-line;
     }
 
+    #visitMessage {
+      margin-top: 1em;
+      font-size: 1.2em;
+      color: #f15d5d;
+      background: #fff0f5;
+      padding: 1em;
+      border-radius: 8px;
+    }
+
     a, button {
       color: #e597b2;
     }
@@ -87,16 +94,35 @@
 <body>
 
 <main class="container">
-  <h1>今日のポケモン</h1>
-  
+  <h1>きょうの　ぽけもん</h1>
+
+  <!-- 訪問メッセージ -->
+  <p id="visitMessage">おみくじ　ひきますか...</p>
+
   <div id="pokemon">
-    <h2 id="pokemonName">読み込み中...</h2>
+    <h2 id="pokemonName">なまえを　しらべています...</h2>
     <img id="pokemonImage" src="" alt="ポケモンの画像">
-    <p id="pokemonDescription">説明文を取得中...</p>
+    <p id="pokemonDescription">せつめいぶんを　つくっています...</p>
   </div>
 </main>
 
 <script>
+  // localStorageから訪問回数を取得し、数値に変換（初回訪問時は0）
+  let visits = parseInt(localStorage.getItem('visits')) || 0;
+
+  // 訪問回数を1増やして保存
+  visits += 1;
+  localStorage.setItem('visits', visits);
+
+  // メッセージを表示
+  const visitMessage = document.getElementById('visitMessage');
+  if (visits === 1) {
+    visitMessage.textContent = 'おみくじ　はじめてですね';
+  } else {
+    visitMessage.textContent = `これで　${visits}どめの　おみくじですね`;
+  }
+
+  // ポケモンの情報を取得
   const pokemonName = document.getElementById('pokemonName');
   const pokemonImage = document.getElementById('pokemonImage');
   const pokemonDescription = document.getElementById('pokemonDescription');
@@ -107,11 +133,11 @@
     .then(response => response.json())
     .then(data => {
       const japaneseName = data.names.find(nameInfo => nameInfo.language.name === "ja");
-      const displayName = japaneseName ? japaneseName.name : "名前不明";
+      const displayName = japaneseName ? japaneseName.name : "なまえが　わかりません";
 
       // 説明文（flavor_text_entries）から日本語のものを探す
       const jpFlavorTexts = data.flavor_text_entries.filter(entry => entry.language.name === "ja");
-      const firstFlavorText = jpFlavorTexts.length > 0 ? jpFlavorTexts[0].flavor_text : "説明文が見つかりませんでした";
+      const firstFlavorText = jpFlavorTexts.length > 0 ? jpFlavorTexts[0].flavor_text : "せつめいが　みつかりません";
 
       // 改行や特殊文字を整形（不要な改行や全角スペースを正規化）
       const cleanedFlavorText = firstFlavorText.replace(/\s+/g, ' ').replace(/。 /g, '。\n');
@@ -126,9 +152,9 @@
       pokemonDescription.textContent = cleanedFlavorText;
     })
     .catch(error => {
-      pokemonName.textContent = "エラーが発生しました";
-      pokemonDescription.textContent = "説明文の取得に失敗しました";
-      console.error(`エラーが発生しました: ${error}`);
+      pokemonName.textContent = "えらー　です";
+      pokemonDescription.textContent = "まちがえ　ました";
+      console.error(`えらー　です: ${error}`);
     });
 </script>
 
