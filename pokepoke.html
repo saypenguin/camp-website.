@@ -97,7 +97,7 @@
   <h1>きょうの　ぽけもん</h1>
 
   <!-- 訪問メッセージ -->
-  <p id="visitMessage">おみくじ　ひきますか...</p>
+  <p id="visitMessage">きょうの　ぽけもんは　...</p>
 
   <div id="pokemon">
     <h2 id="pokemonName">なまえを　しらべています...</h2>
@@ -117,9 +117,9 @@
   // メッセージを表示
   const visitMessage = document.getElementById('visitMessage');
   if (visits === 1) {
-    visitMessage.textContent = 'おみくじ　はじめてですね';
+    visitMessage.textContent = 'くるの　はじめてですね';
   } else {
-    visitMessage.textContent = `これで　${visits}どめの　おみくじですね`;
+    visitMessage.textContent = `これで　${visits}どめの　おとずれですね`;
   }
 
   // ポケモンの情報を取得
